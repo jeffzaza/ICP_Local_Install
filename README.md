@@ -8,6 +8,7 @@ $ --> command prompt, indicates start of a command
 ## Precondition
 Have Vagrant(https://www.vagrantup.com/downloads.html) and VirtualBox(https://www.virtualbox.org/wiki/Downloads) installed.<br/>
 Have your notebook connected to a wifi.
+The following commands can be applied to Mac or Linux straightaway and may need some modifications for Windows.
 
 ## Prepare Vagrant image and VirtualBox VM:
 Under the "Vagrant" folder, there are 5 sub-folders namely:<br/>
