@@ -33,7 +33,7 @@ $ cd {ICP_Local_Install}/vagrant/master-node && vagrant up<br/>
 $ cd {ICP_Local_Install}/vagrant/proxy-node && vagrant up<br/>
 $ cd {ICP_Local_Install}/vagrant/worker-node && vagrant up<br/>
 
-Now infrastructure is ready, and the only left to do before install ICP is to ensure the connectivity among these nodes.<br/>
+Now infrastructure is ready, and the only thing left to do before install ICP is to ensure the connectivity among these nodes.<br/>
 
 ### Ensure Connectivity Among Nodes
 Reteive IP addresses of all four nodes by running the following commands one at a time and take note of the IP for eth1.<br/>
@@ -69,7 +69,7 @@ vagrant ssh -c "sudo su -c 'mv /etc/resolv.tmp /etc/resolv.conf'"
 
 ### Retrieve SSH public key from boot-node and configure the key into master, proxy, worker node, so we won't be asked for password during ICP installation process<br/>
 $ cd {ICP_Local_Install}/vagrant/boot-node<br/>
-$ vagrant ssh -c "sudo su -c 'echo -e  \"y\n\"|ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -P \"\" -C \"\"'"<br/>
+$ vagrant ssh -c "sudo su -c 'echo -e  \\"y\\n\\"|ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -P \\"\\" -C \\"\\"'"<br/>
 $ vagrant ssh -c "sudo su -c 'cat ~/.ssh/id_rsa.pub'"<br/>
 Copy everything between "ssh-rsa" and "==" inclusive (aka. {SSH_PUBLIC_KEY}) into a notepad, we need this rightaway.<br/>
 
