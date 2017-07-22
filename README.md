@@ -22,7 +22,7 @@ worker-node: refer to "https://www.ibm.com/support/knowledgecenter/SSBS6K_1.2.0/
 Assuming "{ICP_Local_Install}" is our working directory already, first of all, we need to build the base image with the following commands:<br/>
 $ cd {ICP_Local_Install}/vagrant/microservice-builder-base && vagrant up<br/>
 This may take several to 1x minutes depends on the network speed.<br/>
-$ vagrant package --base microservice-builder-base --output microservice-builder-base.box
+$ vagrant package --base microservice-builder-base --output microservice-builder-base.box<br/>
 $ vagrant box add microservice-builder-base microservice-builder-base.box<br/>
 This will store the newly created VM as a vagrant image, and now it's safe to remove the transitional VM with the following command.<br/>
 $ vagrant destroy -f<br/>
