@@ -7,8 +7,9 @@ $ --> command prompt, indicates start of a command
 
 ## Precondition
 Have Vagrant(https://www.vagrantup.com/downloads.html) and VirtualBox(https://www.virtualbox.org/wiki/Downloads) installed.<br/>
-Have your notebook connected to a wifi.
-The following commands can be applied to Mac or Linux straightaway and may need some modifications for Windows.
+Have your notebook connected to wifi.<br/>
+The following commands can be applied to Mac or Linux straightaway and may need some modifications for Windows.<br/>
+You have 16GB of RAM.
 
 ## Prepare Vagrant image and VirtualBox VM:
 Under the "Vagrant" folder, there are 5 sub-folders namely:<br/>
@@ -21,7 +22,8 @@ worker-node: refer to "https://www.ibm.com/support/knowledgecenter/SSBS6K_1.2.0/
 Assuming "{ICP_Local_Install}" is our working directory already, first of all, we need to build the base image with the following commands:<br/>
 $ cd {ICP_Local_Install}/vagrant/microservice-builder-base && vagrant up<br/>
 This may take several to 1x minutes depends on the network speed.<br/>
-$ vagrant box add microservice-builder-base microservice-builder-base<br/>
+$ vagrant package --base microservice-builder-base --output microservice-builder-base.box
+$ vagrant box add microservice-builder-base microservice-builder-base.box<br/>
 This will store the newly created VM as a vagrant image, and now it's safe to remove the transitional VM with the following command.<br/>
 $ vagrant destroy -f<br/>
 
