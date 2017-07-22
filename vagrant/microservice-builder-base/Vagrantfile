@@ -26,7 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |v|
     # v.memory = 4000
     v.customize ['modifyvm', :id, '--memory', '2048', '--cpus', '1', '--cableconnected1', 'on']
-    v.name = "boot-node"
+    v.name = "microservice-builder-base"
   end
 
   # Oracle port forwarding
