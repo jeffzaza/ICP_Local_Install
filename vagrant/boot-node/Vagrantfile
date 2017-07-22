@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+$script = <<SCRIPT
+  yum install -y wget
+  cd ~/ && wget -c http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm && rpm -i epel-release-7-10.noarch.rpm
+  yum install -y jq
+  cd ~/ && curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+  hostnamectl set-hostname boot-node
+  yum install -y dnsmasq
+  systemctl start dnsmasq
+  systemctl enable dnsmasq
+SCRIPT
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # copied directly from vagrant init chef/centos-6.5
+  config.vm.box = "microservice-builder-base"
+  
+  config.vm.box_check_update = false
+  #config.vbguest.auto_update = false
+  config.vbguest.auto_update = true
+  
+  # workaround the vagrant 1.8.5 bug
+  config.ssh.insert_key = false
+
+  # change memory size
+  config.vm.provider "virtualbox" do |v|
+    # v.memory = 4000
+    v.customize ['modifyvm', :id, '--memory', '2048', '--cpus', '1', '--cableconnected1', 'on']
+    v.name = "boot-node"
+  end
+
+  # Oracle port forwarding
+  # config.vm.network "forwarded_port", guest: 1521, host: 1521
+  #config.vm.network "public_network", bridge: "en5: Thunderbolt Ethernet", use_dhcp_assigned_default_route: true
+  config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", use_dhcp_assigned_default_route: true
+  #config.vm.network "public_network", bridge: "en7: iPhone USB", use_dhcp_assigned_default_route: true
+
+  #config.vm.network "forwarded_port", guest: 22, host: 2222
+
+  config.vm.provision "shell", inline: $script
+
+  # Provision everything on the first run
+  # config.vm.provision "shell", path: "scripts/install.sh"
+
+  # if Vagrant.has_plugin?("vagrant-proxyconf")
+  #   config.proxy.http     = "http://proxy.example.com/"
+  #   config.proxy.https    = "http://proxy.example.com/"
+  #   config.proxy.no_proxy = "localhost,127.0.0.1"
+  # end
+end
