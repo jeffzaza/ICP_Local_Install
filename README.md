@@ -41,7 +41,7 @@ $ cd {ICP_Local_Install}/vagrant/proxy-node && vagrant ssh -c "ifconfig"<br/>
 $ cd {ICP_Local_Install}/vagrant/worker-node && vagrant ssh -c "ifconfig"<br/>
 
 ### Configure the IP addresses into boot-node and setup boot-node into a DNS server.<br/>
-$ cd {ICP_Local_Install}/vagrant/boot-node && \
+$ cd {ICP_Local_Install}/vagrant/boot-node && \\<br/>
 vagrant ssh -c "sudo su -c 'echo {boot-node-ip} boot-node >> /etc/hosts'" && \\<br/>
 vagrant ssh -c "sudo su -c 'echo {master-node-ip} master-node >> /etc/hosts'" && \\<br/>
 vagrant ssh -c "sudo su -c 'echo {master-node-ip} master.cfc >> /etc/hosts'" && \\<br/>
