@@ -74,22 +74,22 @@ $ vagrant ssh -c "sudo su -c 'cat ~/.ssh/id_rsa.pub'"<br/>
 Copy everything between "ssh-rsa" and "==" inclusive (aka. {SSH_PUBLIC_KEY}) into a notepad, we need this rightaway.<br/>
 
 Configure boot-node's key into master node<br/>
-$ cd {ICP_Local_Install}/vagrant/master-node<br/>
-$ vagrant ssh -c "sudo su -c 'mkdir -p ~/.ssh/'"<br/>
-$ vagrant ssh -c "sudo su -c 'echo {SSH_PUBLIC_KEY} >> ~/.ssh/authorized_keys'"<br/>
-$ vagrant ssh -c "sudo su -c 'chmod 400 ~/.ssh/authorized_keys'"
+$ cd {ICP_Local_Install}/vagrant/master-node && \\<br/>
+vagrant ssh -c "sudo su -c 'mkdir -p ~/.ssh/'" && \\<br/>
+vagrant ssh -c "sudo su -c 'echo {SSH_PUBLIC_KEY} >> ~/.ssh/authorized_keys'" && \\<br/>
+vagrant ssh -c "sudo su -c 'chmod 400 ~/.ssh/authorized_keys'"
 
 Configure boot-node's key into proxy node<br/>
-$ cd {ICP_Local_Install}/vagrant/proxy-node<br/>
-$ vagrant ssh -c "sudo su -c 'mkdir -p ~/.ssh/'"<br/>
-$ vagrant ssh -c "sudo su -c 'echo {SSH_PUBLIC_KEY} >> ~/.ssh/authorized_keys'"<br/>
-$ vagrant ssh -c "sudo su -c 'chmod 400 ~/.ssh/authorized_keys'"
+$ cd {ICP_Local_Install}/vagrant/proxy-node && \\<br/>
+vagrant ssh -c "sudo su -c 'mkdir -p ~/.ssh/'" && \\<br/>
+vagrant ssh -c "sudo su -c 'echo {SSH_PUBLIC_KEY} >> ~/.ssh/authorized_keys'" && \\<br/>
+vagrant ssh -c "sudo su -c 'chmod 400 ~/.ssh/authorized_keys'"
 
 Configure boot-node's key into worker node<br/>
-$ cd {ICP_Local_Install}/vagrant/worker-node<br/>
-$ vagrant ssh -c "sudo su -c 'mkdir -p ~/.ssh/'"<br/>
-$ vagrant ssh -c "sudo su -c 'echo {SSH_PUBLIC_KEY} >> ~/.ssh/authorized_keys'"<br/>
-$ vagrant ssh -c "sudo su -c 'chmod 400 ~/.ssh/authorized_keys'"
+$ cd {ICP_Local_Install}/vagrant/worker-node && \\<br/>
+vagrant ssh -c "sudo su -c 'mkdir -p ~/.ssh/'" && \\<br/>
+vagrant ssh -c "sudo su -c 'echo {SSH_PUBLIC_KEY} >> ~/.ssh/authorized_keys'" && \\<br/>
+vagrant ssh -c "sudo su -c 'chmod 400 ~/.ssh/authorized_keys'"
 
 Test Connectivity From Boot-Node<br/>
 $ cd {ICP_Local_Install}/vagrant/boot-node<br/>
