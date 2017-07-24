@@ -11,6 +11,7 @@ $script = <<SCRIPT
   cd ~/ && curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
   hostnamectl set-hostname boot-node
   yum install -y dnsmasq
+  echo `ifconfig eth1 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
   systemctl start dnsmasq
   systemctl enable dnsmasq
 SCRIPT
