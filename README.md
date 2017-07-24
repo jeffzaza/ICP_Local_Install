@@ -37,18 +37,17 @@ Now infrastructure is ready, and the only thing left to do before install ICP is
 
 ### Ensure Connectivity Among Nodes
 Reteive IP addresses of all four nodes by running the following commands one at a time and take note of the IP for eth1.<br/>
-$ cd {ICP_Local_Install}/vagrant/boot-node && vagrant ssh -c "ifconfig"<br/>
-$ cd {ICP_Local_Install}/vagrant/master-node && vagrant ssh -c "ifconfig"<br/>
-$ cd {ICP_Local_Install}/vagrant/proxy-node && vagrant ssh -c "ifconfig"<br/>
-$ cd {ICP_Local_Install}/vagrant/worker-node && vagrant ssh -c "ifconfig"<br/>
+$ cd {ICP_Local_Install}/vagrant/boot-node && vagrant ssh -c "ifconfig eth1"<br/>
+$ cd {ICP_Local_Install}/vagrant/master-node && vagrant ssh -c "ifconfig eth1"<br/>
+$ cd {ICP_Local_Install}/vagrant/proxy-node && vagrant ssh -c "ifconfig eth1"<br/>
+$ cd {ICP_Local_Install}/vagrant/worker-node && vagrant ssh -c "ifconfig eth1"<br/>
 
 ### Configure the IP addresses into boot-node and setup boot-node into a DNS server.<br/>
 $ cd {ICP_Local_Install}/vagrant/boot-node && \\<br/>
-vagrant ssh -c "sudo su -c 'echo {boot-node-ip} boot-node >> /etc/hosts'" && \\<br/>
-vagrant ssh -c "sudo su -c 'echo {master-node-ip} master-node >> /etc/hosts'" && \\<br/>
-vagrant ssh -c "sudo su -c 'echo {master-node-ip} master.cfc >> /etc/hosts'" && \\<br/>
-vagrant ssh -c "sudo su -c 'echo {proxy-node-ip} proxy-node >> /etc/hosts'" && \\<br/>
-vagrant ssh -c "sudo su -c 'echo {worker-node-ip} worker-node >> /etc/hosts'"
+vagrant ssh -c "sudo su -c 'echo {master-node-ip} master-node master-node >> /etc/hosts'" && \\<br/>
+vagrant ssh -c "sudo su -c 'echo {master-node-ip} master.cfc master.cfc >> /etc/hosts'" && \\<br/>
+vagrant ssh -c "sudo su -c 'echo {proxy-node-ip} proxy-node proxy-node >> /etc/hosts'" && \\<br/>
+vagrant ssh -c "sudo su -c 'echo {worker-node-ip} worker-node worker-node >> /etc/hosts'"
 
 Restart the DNS server running on boot-node<br/>
 $ vagrant ssh -c "sudo su -c 'systemctl restart dnsmasq'"
