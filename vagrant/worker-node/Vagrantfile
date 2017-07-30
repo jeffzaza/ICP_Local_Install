@@ -9,6 +9,13 @@ $script = <<SCRIPT
   cd ~/ && wget -c http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm && rpm -i epel-release-7-10.noarch.rpm
   yum install -y jq
   hostnamectl set-hostname worker-node
+  mkdir -p /etc/systemd/system/docker.service.d && \
+  touch /etc/systemd/system/docker.service.d/override.conf && \
+  echo '[Service]' > /etc/systemd/system/docker.service.d/override.conf && \
+  echo 'ExecStart=' >> /etc/systemd/system/docker.service.d/override.conf && \
+  echo 'ExecStart=/usr/bin/dockerd --insecure-registry=boot-node:5000' >> /etc/systemd/system/docker.service.d/override.conf && \
+  systemctl daemon-reload && \
+  systemctl restart docker
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
