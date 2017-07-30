@@ -11,7 +11,13 @@ $script = <<SCRIPT
   cd ~/ && curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
   hostnamectl set-hostname master-node
   cd ~/ && wget -c https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && unzip ngrok-stable-linux-amd64.zip
-  nohup ./ngrok http 31000 &
+  mkdir -p /etc/systemd/system/docker.service.d && \
+  touch /etc/systemd/system/docker.service.d/override.conf && \
+  echo '[Service]' > /etc/systemd/system/docker.service.d/override.conf && \
+  echo 'ExecStart=' >> /etc/systemd/system/docker.service.d/override.conf && \
+  echo 'ExecStart=/usr/bin/dockerd --insecure-registry=boot-node:5000' >> /etc/systemd/system/docker.service.d/override.conf && \
+  systemctl daemon-reload && \
+  systemctl restart docker
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
