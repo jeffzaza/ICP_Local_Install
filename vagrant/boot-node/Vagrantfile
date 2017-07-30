@@ -14,6 +14,16 @@ $script = <<SCRIPT
   echo `ifconfig eth1 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
   systemctl start dnsmasq
   systemctl enable dnsmasq
+  docker pull registry
+  echo `ifconfig eth1 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
+  mkdir -p /etc/systemd/system/docker.service.d && \
+  touch /etc/systemd/system/docker.service.d/override.conf && \
+  echo '[Service]' > /etc/systemd/system/docker.service.d/override.conf && \
+  echo 'ExecStart=' >> /etc/systemd/system/docker.service.d/override.conf && \
+  echo 'ExecStart=/usr/bin/dockerd --insecure-registry=boot-node:5000' >> /etc/systemd/system/docker.service.d/override.conf && \
+  systemctl daemon-reload && \
+  systemctl restart docker && \
+  docker run -dit -p 5000:5000 --name registry registry
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
