@@ -5,17 +5,32 @@
 VAGRANTFILE_API_VERSION = "2"
 
 $script = <<SCRIPT
-  yum install -y wget
-  cd ~/ && wget -c http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm && rpm -i epel-release-7-10.noarch.rpm
-  yum install -y jq
+  apt-get update; 
+  apt-get --assume-yes install python-software-properties  software-properties-common 
+  add-apt-repository   "deb [arch=amd64] https://download.docker.com/linux/debian   $(lsb_release -cs)  stable"
+  add-apt-repository   "deb http://http.debian.net/debian jessie-backports main"
+	  
+  apt-get --assume-yes install -t jessie-backports openjdk-8-jre-headless
+  apt-get --assume-yes install openjdk-8-jdk
+	      
+  apt-get --assume-yes install  unzip telnet vim net-tools lsof git maven thin-provisioning-tools lvm2 docker-ce
+  systemctl start docker
+  systemctl enable docker
+
+  
+  apt-get --assume-yes install wget
+
+  apt-get --assume-yes install jq
   cd ~/ && curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+
+  
   hostnamectl set-hostname boot-node
-  yum install -y dnsmasq
-  echo `ifconfig eth1 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
+  apt-get --assume-yes install dnsmasq
+  echo `ifconfig eth0 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
+
   systemctl start dnsmasq
   systemctl enable dnsmasq
   docker pull registry
-  echo `ifconfig eth1 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
   mkdir -p /etc/systemd/system/docker.service.d && \
   touch /etc/systemd/system/docker.service.d/override.conf && \
   echo '[Service]' > /etc/systemd/system/docker.service.d/override.conf && \
@@ -26,32 +41,45 @@ $script = <<SCRIPT
   docker run -dit -p 5000:5000 --name registry registry
 SCRIPT
 
+  #echo `ifconfig eth1 | grep "inet " | awk '{ print $2 }'` boot-node boot-node >> /etc/hosts
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # copied directly from vagrant init chef/centos-6.5
-  config.vm.box = "microservice-builder-base"
+  config.vm.box = "google/gce"
   
   config.vm.box_check_update = false
-  #config.vbguest.auto_update = false
-  config.vbguest.auto_update = true
+  config.vbguest.auto_update = false
   
   # workaround the vagrant 1.8.5 bug
   config.ssh.insert_key = false
 
   # change memory size
-  config.vm.provider "virtualbox" do |v|
+  # config.vm.provider "google" do |v|
     # v.memory = 4000
-    v.customize ['modifyvm', :id, '--memory', '2048', '--cpus', '1', '--cableconnected1', 'on']
-    v.name = "boot-node"
+    # v.customize ['modifyvm', :id, '--memory', '2048', '--cpus', '1', '--cableconnected1', 'on']
+    #v.name = "microservice-builder-base"
+  #end
+
+  config.vm.provider :google do |google, override|
+	  google.google_project_id = "theta-index-158101"
+	  google.google_client_email = "jeffzaza-api@theta-index-158101.iam.gserviceaccount.com"
+	  google.google_json_key_location = "/home/jeffzazajr/workspace/ICP_Local_Install/vagrant/microservice-builder-base/jeffzaza-private-key.json"
+
+    	  google.name = "boot-node"
+	  google.image = "jeff-microservice-builder-image" 
+
+          override.ssh.username = "jeffzazajr"
+	  override.ssh.private_key_path = "/home/jeffzazajr/workspace/ICP_Local_Install/vagrant/microservice-builder-base/jeff-local-ubuntu-ssh-key"
+	  #override.ssh.private_key_path = "~/.ssh/google_compute_engine"
   end
 
+  # config.vm.boot_timeout = 600
   # Oracle port forwarding
   # config.vm.network "forwarded_port", guest: 1521, host: 1521
   #config.vm.network "public_network", bridge: "en5: Thunderbolt Ethernet", use_dhcp_assigned_default_route: true
-  config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", use_dhcp_assigned_default_route: true
+  #config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)", use_dhcp_assigned_default_route: true
   #config.vm.network "public_network", bridge: "en7: iPhone USB", use_dhcp_assigned_default_route: true
-
-  #config.vm.network "forwarded_port", guest: 22, host: 2222
-
+  
+  config.vm.network "public_network"
   config.vm.provision "shell", inline: $script
 
   # Provision everything on the first run
@@ -61,5 +89,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   config.proxy.http     = "http://proxy.example.com/"
   #   config.proxy.https    = "http://proxy.example.com/"
   #   config.proxy.no_proxy = "localhost,127.0.0.1"
-  # end
+  #   end
+
 end
