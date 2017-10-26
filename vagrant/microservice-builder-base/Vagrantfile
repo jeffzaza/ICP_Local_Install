@@ -3,29 +3,22 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
+#java-1.8.0-openjdk unzip telnet vim net-tools lsof git maven yum-utils device-mapper-persistent-data lvm2 docker-ce
 
 $script = <<SCRIPT
   apt-get update; 
-  apt-get --assume-yes install python-software-properties  software-properties-common 
-  add-apt-repository   "deb [arch=amd64] https://download.docker.com/linux/debian   $(lsb_release -cs)  stable"
-  add-apt-repository   "deb http://http.debian.net/debian jessie-backports main"
+  apt-get --assume-yes install python-software-properties  software-properties-common apt-transport-https ca-certificates curl gnupg2 software-properties-common 
+  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+  apt-key fingerprint 0EBFCD88
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
+  apt-get update
   
-  apt-get --assume-yes install -t jessie-backports openjdk-8-jre-headless
+  apt-get --assume-yes install  unzip telnet vim net-tools lsof git maven thin-provisioning-tools lvm2 docker-ce
+
+  apt-get --assume-yes install -t jessie-backports ca-certificates-java
   apt-get --assume-yes install openjdk-8-jdk
-  
-  apt-get --assume-yes install  unzip telnet vim net-tools lsof git maven thin-provisioning-tools lvm2 
-
-  cd ~ 
-  wget http://ftp.tw.debian.org/debian/pool/main/a/apparmor/libapparmor1_2.9.0-3_amd64.deb
-  dpkg -i libapparmor1_2.9.0-3_amd64.deb
-  
-  wget http://ftp.tw.debian.org/debian/pool/main/libt/libtool/libltdl7_2.4.6-2_amd64.deb
-  dpkg -i libltdl7_2.4.6-2_amd64.deb
-
-  wget https://download.docker.com/linux/debian/dists/jessie/pool/stable/amd64/docker-ce_17.03.2~ce-0~debian-jessie_amd64.deb
-  dpkg -i docker-ce_17.03.2~ce-0~debian-jessie_amd64.deb
-
-
+  update-java-alternatives --set java-1.8.0-openjdk-amd64
+    
   systemctl start docker
   systemctl enable docker
 SCRIPT
@@ -51,10 +44,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :google do |google, override|
 	  google.google_project_id = "theta-index-158101"
 	  google.google_client_email = "jeffzaza-api@theta-index-158101.iam.gserviceaccount.com"
-	  google.google_json_key_location = "/home/jeffzazajr/workspace/ICP_Local_Install/vagrant/microservice-builder-base/jeffzaza-private-key.json"
+	  google.google_json_key_location = "/home/jeffzazajr/workspace/ICP_Local_Install/vagrant/microservice-builder-base/jeffzaza-api.json"
 
     	  google.name = "microservice-builder-base"
-
+	  google.disk_size= "20"
+	  google.zone = "asia-east1-a"	  
 
           override.ssh.username = "jeffzazajr"
 	  override.ssh.private_key_path = "/home/jeffzazajr/workspace/ICP_Local_Install/vagrant/microservice-builder-base/jeff-local-ubuntu-ssh-key"
